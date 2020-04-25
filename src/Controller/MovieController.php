@@ -19,7 +19,7 @@ class MovieController extends AbstractController
     public function index(Request $request, PaginatorInterface $paginator) {
 
         $movies = $this->getDoctrine()->getRepository(Movie::class)->findAll();
-            //{
+            //
             // $movies = $paginator->paginate(
             // ($this->getDoctrine()->getRepository(Movie::class)->findAll()),
             // $request->query->getInt('page',1),
