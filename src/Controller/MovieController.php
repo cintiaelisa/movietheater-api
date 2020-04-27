@@ -19,11 +19,6 @@ class MovieController extends AbstractController
     public function index(Request $request, PaginatorInterface $paginator) {
 
         $movies = $this->getDoctrine()->getRepository(Movie::class)->findAll();
-            //
-            // $movies = $paginator->paginate(
-            // ($this->getDoctrine()->getRepository(Movie::class)->findAll()),
-            // $request->query->getInt('page',1),
-            // 5);
 
         return $this->json([
             'data' => $movies
@@ -53,7 +48,7 @@ class MovieController extends AbstractController
         $movie->setYear($data['year']);
         $movie->setDescription($data['description']);
         $movie->setGenre($data['genre']);
-        $movie->setSchedule(null);
+        $movie->setSchedule($data['schedule']);
 
         $doctrine = $this->getDoctrine()->getManager();
 
@@ -72,8 +67,7 @@ class MovieController extends AbstractController
      public function update($movieId, Request $request) {
 
         $data = $request->request->all();
-        $doctrine =$this->getDoctrine();
-        $movie = $doctrine->getRepository(Movie::class)->find($movieId);
+        $movie = $this->getDoctrine()->getRepository(Movie::class)->find($movieId);
 
         if($request->request->has('name')) 
             $movie->setName($data['name']);
@@ -87,13 +81,16 @@ class MovieController extends AbstractController
         if($request->request->has('genre'))
             $movie->setGenre($data['genre']);
 
-        $movie->setSchedule(null);
+        if($request->request->has('schedule'))
+            $movie->setSchedule($data['schedule']);
 
-        $manager = $doctrine->getManager();
-        $manager->flush();
+        $doctrine = $this->getDoctrine()->getManager();
+        //$doctrine->persist($movie);
+        $doctrine->flush();
 
         return $this->json([
-            'data' => 'Succesfully updated.'
+            //'data' => 'Succesfully updated.'
+            'data' => $data
         ]);
 
      }
